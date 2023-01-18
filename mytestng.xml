@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Regression Suite">
+    <test name="Funtional Testing">
+        <classes>
+            <class name="seleniumbasics.SeleniumBasics">
+                <methods>
+                    <include name="TC_001_verifyObsquraTitle"/>
+                    <include name="TC_002_verifyTwoInputFieldMessage"/>
+                    <include name="TC_003_verifySingleInputFieldMessage"/>
+                    <exclude name="TC_004_verifyValidationMessage"/>
+                </methods>
+            </class>
+            <class name="seleniumbasics.Vehicle">
+                <methods>
+                    <include name="verifyVehicleQuality"/>
+                    <include name="verifyVehicleBrand"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Non Funtional Testing">
+        <classes>
+            <class name="seleniumbasics.SeleniumBasics">
+                <methods>
+                    <include name="TC_005_verifySubmitFormNOZip"/>
+                    <include name="TC_006_verifySubmitForm"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

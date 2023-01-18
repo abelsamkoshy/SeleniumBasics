@@ -1,20 +1,26 @@
 package seleniumbasics;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.*;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.ITestResult;
+import org.testng.annotations.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 
 public class SeleniumBasics {
@@ -33,6 +39,30 @@ public class SeleniumBasics {
         driver.manage().window().maximize();
         driver.manage().deleteAllCookies();
     }
+    @BeforeSuite
+    public void beforeSuite(){
+        System.out.println("This is before suite");
+    }
+    @BeforeTest
+    public void beforeTest(){
+        System.out.println("This is before test");
+    }
+    @BeforeClass
+    public void beforeClass(){
+        System.out.println("This is before class");
+    }
+    @AfterSuite
+    public void afterSuite(){
+        System.out.println("This is after suite");
+    }
+    @AfterTest
+    public void afterTest(){
+        System.out.println("This is after Test");
+    }
+    @AfterClass
+    public void afterClass(){
+        System.out.println("This is after Class");
+    }
 
     @BeforeMethod
     public void setUp() {
@@ -40,8 +70,13 @@ public class SeleniumBasics {
     }
 
     @AfterMethod
-    public void tearDown() {
-       // driver.close();
+    public void tearDown(ITestResult result) throws IOException {
+        if(result.getStatus()==ITestResult.FAILURE){
+            TakesScreenshot takeScreenshot=(TakesScreenshot)driver;
+            File screenshot=takeScreenshot.getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(screenshot, new File("./Screenshots/"+result.getName()+".png"));
+        }
+        driver.close();
        // driver.quit();
     }
 
@@ -52,7 +87,6 @@ public class SeleniumBasics {
         String expectedTitle = "Obsqura Testing";
         Assert.assertEquals(actualTitle, expectedTitle, "Invalid Title Found");
     }
-
     @Test
     public void TC_002_verifyTwoInputFieldMessage() {
         driver.get("https://selenium.obsqurazone.com/simple-form-demo.php");
@@ -64,10 +98,9 @@ public class SeleniumBasics {
         getTotal.click();
         WebElement total = driver.findElement(By.id("message-two"));
         String actualTotal = total.getText();
-        String expectedTotal = "Total A + B : 100";
+        String expectedTotal = "Total A + B : 110";
         Assert.assertEquals(actualTotal, expectedTotal, "Invalid Total");
     }
-
     @Test
     public void TC_003_verifySingleInputFieldMessage() {
         driver.get("https://selenium.obsqurazone.com/simple-form-demo.php");
@@ -79,9 +112,7 @@ public class SeleniumBasics {
         String showMessageActual = showMessage.getText();
         String showMessageExpected = "Your Message : Check Message";
         Assert.assertEquals(showMessageExpected, showMessageActual, "Invalid Message");
-
     }
-
     @Test
     public void TC_004_verifyValidationMessage() {
         driver.get("https://selenium.obsqurazone.com/form-submit.php");
@@ -194,11 +225,14 @@ public class SeleniumBasics {
         WebElement submitButton = driver.findElement(By.cssSelector("button[id='demo']"));
         submitButton.click();
     }
+
     @Test
     public void TC_009_verifyQuitAndClose(){
         driver.get("https://demo.guru99.com/popup.php");
         WebElement clickHere = driver.findElement(By.xpath("//a[text()='Click Here']"));
         clickHere.click();
+        //driver.close();
+        driver.quit();
     }
     @Test
     public void TC_010_verifyNavigateTo(){
@@ -246,7 +280,7 @@ public class SeleniumBasics {
     public void TC_014_verifyIsDisplayed(){
         driver.get("https://selenium.obsqurazone.com/ajax-form-submit.php");
         WebElement subject = driver.findElement(By.xpath("//input[@id='subject']"));
-        subject.sendKeys("Selenium");
+        //subject.sendKeys("Selenium");
         boolean status=subject.isDisplayed();
         Assert.assertTrue(status,"subject field is not displayed");
     }
@@ -431,6 +465,7 @@ public class SeleniumBasics {
         driver.switchTo().parentFrame();
       //  driver.switchTo().defaultContent();
     }
+
     @Test
     public void TC_026_verifyRightClick(){
         driver.get("https://demo.guru99.com/test/simple_context_menu.html");
@@ -499,7 +534,7 @@ public class SeleniumBasics {
         //action.dragAndDropBy();
     }
     @Test
-    public void verifyValuesInDropDown(){
+    public void TC_033_verifyValuesInDropDown(){
         driver.get("https://demo.guru99.com/test/newtours/register.php");
         List<String> expDropDownList = new ArrayList<>();
         expDropDownList.add("ALBANIA");
@@ -523,7 +558,7 @@ public class SeleniumBasics {
         select.getAllSelectedOptions();
     }
 @Test
-    public void verifyMethodsInSelectClass(){
+    public void TC_034_verifyMethodsInSelectClass(){
         driver.get("https://www.softwaretestingmaterial.com/sample-webpage-to-automate/");
         WebElement dropDown = driver.findElement(By.xpath("(//select[@class='spTextField'])[1]"));
         Select select= new Select(dropDown);
@@ -531,11 +566,147 @@ public class SeleniumBasics {
         System.out.println(multipleStatus);
         select.selectByVisibleText("Performance Testing");
         select.selectByValue("msmanual");
-        List<WebElement> selectedOption= select.getAllSelectedOptions();
+        List<WebElement> selectedOption= select.getOptions();
         for(int i=0; i< selectedOption.size();i++){
             System.out.println(selectedOption.get(i).getText());
         }
     select.deselectByValue("msmanual");
     select.deselectAll();
 }
+
+    @Test
+    public void TC_035_verifyFileUploadInSelenium() {
+        driver.get("https://demo.guru99.com/test/upload/");
+        WebElement chooseFileMenu= driver.findElement(By.xpath("//input[@id='uploadfile_0']"));
+        chooseFileMenu.sendKeys("D:\\Selenium\\fileUpload example.TXT");
+        WebElement acceptCheckBox = driver.findElement(By.xpath("//input[@id='terms']"));
+        acceptCheckBox.click();
+        WebElement submitFileButton= driver.findElement(By.xpath("//button[@id='submitbutton']"));
+        submitFileButton.click();
+    }
+    @Test
+    public void TC_036_verifyJavaScriptExecutor(){
+        driver.get("https://demowebshop.tricentis.com/");
+        JavascriptExecutor js =(JavascriptExecutor) driver;
+        js.executeScript("document.getElementById('newsletter-email').value='test@test.com'");
+        js.executeScript("document.getElementById('newsletter-subscribe-button').click()");
+    }
+    @Test
+    public void TC_037_verifyWeightInSelenium(){
+        driver.get("https://demowebshop.tricentis.com/");
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        WebElement email = driver.findElement(By.xpath("//input[@id='newsletter-email']"));
+        email.sendKeys("abel@gmail.com");
+        WebElement subscribe = driver.findElement(By.xpath("//input[@id='newsletter-subscribe-button']"));
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOf(subscribe));
+        FluentWait fWeight = new FluentWait(driver);
+        wait.withTimeout(Duration.ofSeconds(10));
+        wait.pollingEvery(Duration.ofSeconds(1));
+        fWeight.until(ExpectedConditions.visibilityOf(subscribe));
+        subscribe.click();
+    }
+
+    @Test
+    public void TC_038_verifyReviewGlobal() throws InterruptedException {
+        driver.get("https://www.globalsqa.com/samplepagetest/");
+        WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(10));
+        WebElement chooseFile = driver.findElement(By.xpath("//input[@class='wpcf7-form-control wpcf7-file']"));
+        chooseFile.sendKeys("D:\\Selenium\\fileUpload example.TXT");
+        WebElement name= driver.findElement(By.xpath("//input[@id='g2599-name']"));
+        name.sendKeys("Abel");
+        WebElement mail = driver.findElement(By.xpath("//input[@id='g2599-email']"));
+        mail.sendKeys("abel@gmail.com");
+        WebElement website = driver.findElement(By.xpath("//input[@id='g2599-website']"));
+        website.sendKeys("abel.com");
+        WebElement dropDown= driver.findElement(By.xpath("//select[@id='g2599-experienceinyears']"));
+        Select select = new Select(dropDown);
+      //  select.selectByVisibleText("3-5");
+        wait.until(ExpectedConditions.visibilityOf(dropDown));
+        select.selectByValue("3-5");
+        WebElement expertise =driver.findElement(By.xpath("//*[@id=\"contact-form-2599\"]/form/div[5]/label[3]"));
+        Thread.sleep(2000);
+//        wait.until(ExpectedConditions.elementToBeClickable(expertise));
+        expertise.click();
+//        List<WebElement> edu = driver.findElement(By.linkText("Expertise :"));
+//        for (int i=0;edu.size();i++){
+//            String autoTest = edu.get(i).getAttribute("value");
+//            if(edu.equals("Automation Testing")){
+//                edu.get(i).click();
+//            }
+//        }
+        WebElement education = driver.findElement(By.xpath("(//div[@class='grunion-field-wrap grunion-field-radio-wrap']//label[@class='grunion-radio-label radio']/following-sibling::label)[1]"));
+        Thread.sleep(2000);
+//        wait.until(ExpectedConditions.elementToBeClickable(education));
+        education.click();
+        WebElement alertClick = driver.findElement(By.xpath("//button[text()='Alert Box : Click Here']"));
+        wait.until(ExpectedConditions.elementToBeClickable(alertClick));
+        alertClick.click();
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+        alert.accept();
+        WebElement comment = driver.findElement(By.xpath("//textarea[@id='contact-form-comment-g2599-comment']"));
+        comment.sendKeys("hi");
+        WebElement submit = driver.findElement(By.xpath("//button[text()='Submit']"));
+        wait.until(ExpectedConditions.elementToBeClickable(submit));
+        submit.submit();
+    }
+    @Test
+    public void TC_039_verifyScrollDownOfWebPage(){
+        driver.get("https://demo.guru99.com/test/guru99home/");
+        JavascriptExecutor js= (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,1000)");
+    }
+    @Test
+    public void TC_040_verifyScrollingToViewOfWebElement(){
+        driver.get("https://demo.guru99.com/test/guru99home/");
+        WebElement linux = driver.findElement(By.linkText("Linux"));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();",linux);
+
+    }
+    @Test
+    public void TC_041_verifyScrollToBottomOfPage(){
+        driver.get("https://demo.guru99.com/test/guru99home/");
+        JavascriptExecutor js =(JavascriptExecutor) driver;
+        js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
+    }
+    @Test
+    public  void TC_042_verifyHorizontalScroll(){
+        driver.get("http://demo.guru99.com/test/guru99home/scrolling.html");
+        WebElement vbScript = driver.findElement(By.linkText("VBScript"));
+        JavascriptExecutor js =(JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();",vbScript);
+    }
+    @Test
+    public void TC_043_verifyTable() throws IOException {
+        driver.get("https://www.w3schools.com/html/html_tables.asp");
+        List<WebElement> rowElements= driver.findElements(By.xpath("//table[@id='customers']//tbody//tr"));
+        List<WebElement> columnElements = driver.findElements(By.xpath("//table[@id='customers']//tbody//tr//td"));
+        System.out.println(rowElements);
+        List<ArrayList<String>> actGridData=TableUtility.get_Dynamic_TwoDimension_TablElemnts(rowElements,columnElements);
+        List<ArrayList<String>> expGridData=ExcelUtility.excelDataReader("\\src\\test\\resources\\TestData.xlsx","Table");
+        Assert.assertEquals(actGridData,expGridData,"Invalid data found in table");
+    }
+    @Test
+    public void TC_044_verifyFileUploadUsingRobotClass() throws AWTException, InterruptedException {
+        driver.get("https://www.foundit.in/seeker/registration");
+        StringSelection s= new StringSelection("D:\\Selenium\\fileUpload example.TXT");
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s,null);
+        WebElement chooseFile= driver.findElement(By.xpath("//span[text()='Choose CV']"));
+        chooseFile.click();
+        Robot r= new Robot();
+        r.keyPress(KeyEvent.VK_ENTER);
+        r.keyRelease(KeyEvent.VK_ENTER);
+        Thread.sleep(5000);
+        r.keyPress(KeyEvent.VK_CONTROL);
+        r.keyPress(KeyEvent.VK_V);
+        Thread.sleep(5000);
+        r.keyRelease(KeyEvent.VK_CONTROL);
+        r.keyRelease(KeyEvent.VK_V);
+        Thread.sleep(5000);
+        r.keyPress(KeyEvent.VK_ENTER);
+        r.keyRelease(KeyEvent.VK_ENTER);
+    }
 }
