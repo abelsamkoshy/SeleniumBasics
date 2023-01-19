@@ -1,4 +1,4 @@
-package seleniumbasics;
+package automationcore;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
@@ -8,53 +8,24 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import seleniumbasics.ExcelUtility;
+import seleniumbasics.RandomDataUtility;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemoWebShop {
-    WebDriver driver;
+public class ParallelTesting extends Base {
 
-    public void testInitialize(String browser) {
-        if (browser.equals("chrome")) {
-            driver = new ChromeDriver();
-        } else if (browser.equals("Edge")) {
-            driver = new EdgeDriver();
-        } else if (browser.equals("Firefox")) {
-            driver = new FirefoxDriver();
-        } else {
-            throw new RuntimeException("Invalid Browser");
-        }
-        driver.manage().window().maximize();
-        driver.manage().deleteAllCookies();
-    }
-    @BeforeMethod(alwaysRun = true)
-    @Parameters({"browser","base_url"})
-    public void setUp(String browserName,String url) {
-        testInitialize(browserName);
-        driver.get(url);
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void tearDown(ITestResult result) throws IOException {
-        if(result.getStatus()==ITestResult.FAILURE){
-            TakesScreenshot takeScreenshot=(TakesScreenshot)driver;
-            File screenshot=takeScreenshot.getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(screenshot, new File("./Screenshots/"+result.getName()+".png"));
-        }
-        driver.close();
-        // driver.quit();
-    }
-    @Test(priority = 1,enabled = true,description = "Verify Titl for DemoWebShop",groups = {"Regression"})
+    @Test
     public void TC_001_verifyDemoWebShopTitle() throws IOException {
         String actualTitle = driver.getTitle();
         List<ArrayList<String>> data = ExcelUtility.excelDataReader("\\src\\test\\resources\\TestData.xlsx", "HomePage");
         String expectedTitle = data.get(0).get(1);
         Assert.assertEquals(actualTitle, expectedTitle, "Invalid Title found");
     }
-    @Test(priority = 2,enabled = true,description = "Verify Titl for DemoWebShop",groups = {"Regression"})
+    @Test
     public void TC_002_verifyLogin(){
         WebElement login1= driver.findElement(By.xpath("//a[@class='ico-login']"));
         login1.click();
@@ -70,7 +41,8 @@ public class DemoWebShop {
         Assert.assertEquals(mail,actMail,"Login Failed");
     }
 
-    @Test(priority = 3,enabled = true,description = "Verify Titl for DemoWebShop",groups = {"Smoke"})
+
+    @Test
     public void TC_003_verifyRegistration() throws IOException {
         WebElement reg1= driver.findElement(By.xpath("//a[@class='ico-register']"));
         reg1.click();
@@ -108,7 +80,7 @@ public class DemoWebShop {
         }
 
     }
-    @Test(dataProvider = "Credentials",priority = 4,enabled = true,description = "Verify Titl for DemoWebShop",groups = {"Regression","Sanity"})
+    @Test(dataProvider = "Credentials")
     public void TC_004_verifyInvalidLogin(String userName, String pword){
         WebElement login1= driver.findElement(By.xpath("//a[@class='ico-login']"));
         login1.click();
@@ -129,7 +101,7 @@ public class DemoWebShop {
         Object[][] data= {{"abelS@gmail.com","Abel@123"},{"abelSam@gmail.com","Abel@1234"},{"abelS@gmail.com","Abel"}};
         return data;
     }
-    @Test(priority = 5,enabled = true,description = "Verify Titl for DemoWebShop",groups = {"Sanity"})
+    @Test
     public void TC_005_verifyRegistrationDataRandomGeneration(){
         WebElement reg1= driver.findElement(By.xpath("//a[@class='ico-register']"));
         reg1.click();
@@ -155,7 +127,7 @@ public class DemoWebShop {
         String actualEmail=userAccount.getText();
         Assert.assertEquals(actualEmail,email,"Registration failed");
     }
-    @Test(dataProvider = "Login",priority = 5,enabled = true,description = "Verify Titl for DemoWebShop",groups = {"Sanity"})
+    @Test(dataProvider = "Login")
     public void TC_006_verifyLoginByParameterization(String userName, String pword){
         WebElement login1= driver.findElement(By.xpath("//a[@class='ico-login']"));
         login1.click();
@@ -175,7 +147,7 @@ public class DemoWebShop {
         Object[][] loginData={{"abelSam@gmail.com","Abel@123"}};
         return loginData;
     }
-    @Test(priority = 5,enabled = true,description = "Verify Titl for DemoWebShop",groups = {"Smoke"})
+    @Test
     @Parameters({"userName","pword"})
     public void TC_007_verifyLoginByParameteriztion(String uName, String password){
         WebElement login1= driver.findElement(By.xpath("//a[@class='ico-login']"));

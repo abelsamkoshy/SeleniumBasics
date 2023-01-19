@@ -2,16 +2,16 @@
 <testng-results ignored="6" total="7" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2023-01-18T00:39:58 IST" name="Parameter Suite" finished-at="2023-01-18T00:40:04 IST" duration-ms="6609">
+  <suite started-at="2023-01-19T07:44:27 IST" name="Parameter Suite" finished-at="2023-01-19T07:45:03 IST" duration-ms="36912">
     <groups>
     </groups>
-    <test started-at="2023-01-18T00:39:58 IST" name="Parameter Test" finished-at="2023-01-18T00:40:04 IST" duration-ms="6609">
+    <test started-at="2023-01-19T07:44:27 IST" name="Parameter Test" finished-at="2023-01-19T07:45:03 IST" duration-ms="36912">
       <class name="seleniumbasics.DemoWebShop">
-        <test-method is-config="true" signature="setUp(java.lang.String,java.lang.String)[pri:0, instance:seleniumbasics.DemoWebShop@79efed2d]" started-at="2023-01-18T00:39:58 IST" name="setUp" finished-at="2023-01-18T00:40:02 IST" duration-ms="4907" status="PASS">
+        <test-method is-config="true" signature="setUp(java.lang.String,java.lang.String)[pri:0, instance:seleniumbasics.DemoWebShop@147ed70f]" started-at="2023-01-19T07:44:27 IST" name="setUp" finished-at="2023-01-19T07:45:01 IST" duration-ms="34684" status="PASS">
           <params>
             <param index="0">
               <value>
-                <![CDATA[chrome]]>
+                <![CDATA[Edge]]>
               </value>
             </param>
             <param index="1">
@@ -23,7 +23,7 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setUp -->
-        <test-method signature="TC_007_verifyLoginByParameteriztion(java.lang.String,java.lang.String)[pri:0, instance:seleniumbasics.DemoWebShop@79efed2d]" started-at="2023-01-18T00:40:02 IST" name="TC_007_verifyLoginByParameteriztion" finished-at="2023-01-18T00:40:04 IST" duration-ms="1542" status="PASS">
+        <test-method signature="TC_007_verifyLoginByParameteriztion(java.lang.String,java.lang.String)[pri:0, instance:seleniumbasics.DemoWebShop@147ed70f]" started-at="2023-01-19T07:45:01 IST" name="TC_007_verifyLoginByParameteriztion" finished-at="2023-01-19T07:45:03 IST" duration-ms="2042" status="PASS">
           <params>
             <param index="0">
               <value>
@@ -39,11 +39,11 @@
           <reporter-output>
           </reporter-output>
         </test-method> <!-- TC_007_verifyLoginByParameteriztion -->
-        <test-method is-config="true" signature="tearDown(org.testng.ITestResult)[pri:0, instance:seleniumbasics.DemoWebShop@79efed2d]" started-at="2023-01-18T00:40:04 IST" name="tearDown" finished-at="2023-01-18T00:40:04 IST" duration-ms="103" status="PASS">
+        <test-method is-config="true" signature="tearDown(org.testng.ITestResult)[pri:0, instance:seleniumbasics.DemoWebShop@147ed70f]" started-at="2023-01-19T07:45:03 IST" name="tearDown" finished-at="2023-01-19T07:45:03 IST" duration-ms="118" status="PASS">
           <params>
             <param index="0">
               <value>
-                <![CDATA[[TestResult name=TC_007_verifyLoginByParameteriztion status=SUCCESS method=DemoWebShop.TC_007_verifyLoginByParameteriztion(java.lang.String,java.lang.String)[pri:0, instance:seleniumbasics.DemoWebShop@79efed2d] output={null}]]]>
+                <![CDATA[[TestResult name=TC_007_verifyLoginByParameteriztion status=SUCCESS method=DemoWebShop.TC_007_verifyLoginByParameteriztion(java.lang.String,java.lang.String)[pri:0, instance:seleniumbasics.DemoWebShop@147ed70f] output={null}]]]>
               </value>
             </param>
           </params>

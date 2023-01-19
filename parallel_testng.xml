@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Parameter Suite">
+    <test name="Parameter Test" parallel="methods" thread-count="2">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="base_url" value="https://demowebshop.tricentis.com/"/>
+        <parameter name="userName" value="abelSam@gmail.com"/>
+        <parameter name="pword" value="Abel@123"/>
+        <classes>
+
+            <class name="automationcore.ParallelTesting">
+                <methods>
+                    <include name="TC_001_verifyDemoWebShopTitle"/>
+                    <include name="TC_002_verifyLogin"/>
+                    <exclude name="TC_003_verifyRegistration"/>
+                    <exclude name="TC_004_verifyInvalidLogin"/>
+                    <exclude name="TC_005_verifyRegistrationDataRandomGeneration"/>
+                    <include name="TC_006_verifyLoginByParameterization"/>
+                    <include name="TC_007_verifyLoginByParameteriztion"/>
+
+
+                </methods>
+            </class>
+
+        </classes>
+    </test>
+</suite>
